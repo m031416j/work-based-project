@@ -1,6 +1,8 @@
 package com.blog.blogservice.service;
 
+import com.blog.blogservice.entity.Post;
 import com.blog.blogservice.entity.PostList;
+import com.blog.blogservice.entity.PostRequest;
 
 public interface PostService {
 
@@ -17,4 +19,8 @@ public interface PostService {
     PostList getAllPostsBySkillId(Integer id);
 
     PostList getAllPostsBySkillDescription(String description);
+
+    Post createPost(PostRequest request);
+
+    Post updatePost(PostRequest request);
 }

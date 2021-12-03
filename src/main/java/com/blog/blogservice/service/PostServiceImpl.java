@@ -1,18 +1,22 @@
 package com.blog.blogservice.service;
 
-import com.blog.blogservice.entity.Post;
-import com.blog.blogservice.entity.PostList;
+import com.blog.blogservice.entity.*;
+import com.blog.blogservice.mapper.PostRequestMapper;
 import com.blog.blogservice.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private PostRequestMapper mapper;
 
     @Override
     public PostList getAllPosts() {
@@ -68,5 +72,21 @@ public class PostServiceImpl implements PostService {
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
+    }
+
+    @Override
+    public Post createPost(PostRequest request) {
+        Post post = mapper.createPostFromRequest(request);
+        return postRepository.save(post);
+    }
+
+    @Override
+    public Post updatePost(PostRequest request) {
+        Optional<Post> existingPost = postRepository.findById(request.getPostId());
+        if(existingPost.isEmpty()) {
+            return null;
+        }
+        Post updatedPost = mapper.updatePostFromRequest(request);
+        return postRepository.save(updatedPost);
     }
 }
