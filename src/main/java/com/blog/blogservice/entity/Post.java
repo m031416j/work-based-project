@@ -19,25 +19,23 @@ public class Post {
     @JsonProperty("postId")
     private Integer postId;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_department", referencedColumnName = "department_id")
-    @JsonProperty("department")
-    @NotNull
     private Department department;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_manager", referencedColumnName = "manager_id")
     @JsonProperty("manager")
     @NotNull
     private Manager manager;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_role", referencedColumnName = "role_id")
     @JsonProperty("role")
     @NotNull
     private Role role;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.MERGE
             })

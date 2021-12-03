@@ -2,7 +2,10 @@ package com.blog.blogservice.service;
 
 import com.blog.blogservice.entity.*;
 import com.blog.blogservice.mapper.PostRequestMapper;
+import com.blog.blogservice.repository.DepartmentRepository;
+import com.blog.blogservice.repository.ManagerRepository;
 import com.blog.blogservice.repository.PostRepository;
+import com.blog.blogservice.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,12 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private ManagerRepository managerRepository;
 
     @Autowired
     private PostRequestMapper mapper;
@@ -86,7 +95,11 @@ public class PostServiceImpl implements PostService {
         if(existingPost.isEmpty()) {
             return null;
         }
-        Post updatedPost = mapper.updatePostFromRequest(request);
+        Department d = departmentRepository.getById(request.getDepartmentId());
+        Manager m = managerRepository.getById(request.getManagerId());
+        Role r = roleRepository.getById(request.getRoleId());
+
+        Post updatedPost = mapper.updatePostFromRequest(request, existingPost.get(), d, m, r);
         return postRepository.save(updatedPost);
     }
 }
