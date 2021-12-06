@@ -2,10 +2,7 @@ package com.blog.blogservice.service;
 
 import com.blog.blogservice.entity.*;
 import com.blog.blogservice.mapper.PostRequestMapper;
-import com.blog.blogservice.repository.DepartmentRepository;
-import com.blog.blogservice.repository.ManagerRepository;
-import com.blog.blogservice.repository.PostRepository;
-import com.blog.blogservice.repository.RoleRepository;
+import com.blog.blogservice.utils.RepositoryContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,20 +13,14 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService {
 
     @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private DepartmentRepository departmentRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private ManagerRepository managerRepository;
+    private RepositoryContainer repositoryContainer;
 
     @Autowired
     private PostRequestMapper mapper;
 
     @Override
     public PostList getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = repositoryContainer.getPostRepository().findAll();
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
@@ -37,7 +28,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostList getAllPostsByDepartmentId(Integer id) {
-        List<Post> posts = postRepository.findAllByDepartmentId(id);
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByDepartmentId(id);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
@@ -45,7 +36,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostList getAllPostsByDepartmentName(String name) {
-        List<Post> posts = postRepository.findAllByDepartmentName(name);
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByDepartmentName(name);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
@@ -53,7 +44,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostList getAllPostsByManagerId(Integer id) {
-        List<Post> posts = postRepository.findAllByManagerId(id);
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByManagerId(id);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
@@ -61,7 +52,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostList getAllPostsByManagerName(String firstName, String surname) {
-        List<Post> posts = postRepository.findAllByManagerFirstNameAndManagerSurname(firstName, surname);
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByManagerFirstNameAndManagerSurname(firstName, surname);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
@@ -69,7 +60,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostList getAllPostsBySkillId(Integer id) {
-        List<Post> posts = postRepository.findAllByTechnicalSkillId(id);
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByTechnicalSkillId(id);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
@@ -77,7 +68,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostList getAllPostsBySkillDescription(String description) {
-        List<Post> posts = postRepository.findAllByTechnicalSkillDescription(description);
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByTechnicalSkillDescription(description);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return postList;
@@ -86,20 +77,27 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post createPost(PostRequest request) {
         Post post = mapper.createPostFromRequest(request);
-        return postRepository.save(post);
+        return repositoryContainer.getPostRepository().save(post);
     }
 
     @Override
     public Post updatePost(PostRequest request) {
-        Optional<Post> existingPost = postRepository.findById(request.getPostId());
+        Optional<Post> existingPost = repositoryContainer.getPostRepository().findById(request.getPostId());
         if(existingPost.isEmpty()) {
             return null;
         }
-        Department d = departmentRepository.getById(request.getDepartmentId());
-        Manager m = managerRepository.getById(request.getManagerId());
-        Role r = roleRepository.getById(request.getRoleId());
 
-        Post updatedPost = mapper.updatePostFromRequest(request, existingPost.get(), d, m, r);
-        return postRepository.save(updatedPost);
+        Post updatedPost = mapUpdatedPost(request, existingPost.get());
+
+        return repositoryContainer.getPostRepository().save(updatedPost);
+
+    }
+
+    private Post mapUpdatedPost(PostRequest request, Post existingPost) {
+        return mapper.updatePostFromRequest(request,
+                existingPost,
+                repositoryContainer.getDepartmentRepository().getById(request.getDepartmentId()),
+                repositoryContainer.getManagerRepository().getById(request.getManagerId()),
+                repositoryContainer.getRoleRepository().getById(request.getRoleId()));
     }
 }

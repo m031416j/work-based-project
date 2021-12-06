@@ -4,7 +4,6 @@ import com.blog.blogservice.entity.*;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Configuration
