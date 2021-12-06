@@ -1,7 +1,5 @@
 package com.blog.blogservice.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +14,6 @@ public class Post {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "post_id")
-    @JsonProperty("postId")
     private Integer postId;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -25,14 +22,10 @@ public class Post {
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_manager", referencedColumnName = "manager_id")
-    @JsonProperty("manager")
-    @NotNull
     private Manager manager;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "post_role", referencedColumnName = "role_id")
-    @JsonProperty("role")
-    @NotNull
     private Role role;
 
     @ManyToMany(fetch = FetchType.EAGER,
@@ -42,16 +35,12 @@ public class Post {
     @JoinTable(name = "post_technical_skill",
             joinColumns = { @JoinColumn(name = "post_id")},
             inverseJoinColumns = { @JoinColumn(name = "technical_skill_id")})
-    @JsonProperty("technicalSkills")
-    @NotNull
     private Set<TechnicalSkill> technicalSkill = new HashSet<>();
 
     @Column(name = "post_content", columnDefinition = "TEXT")
-    @JsonProperty("content")
     private String postContent;
 
     @Column(name = "post_rating")
-    @JsonProperty("rating")
     private Integer postRating;
 
     public Post(Department department, Manager manager, Role role, String postContent, Integer postRating) {

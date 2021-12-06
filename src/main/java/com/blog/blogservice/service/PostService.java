@@ -3,10 +3,11 @@ package com.blog.blogservice.service;
 import com.blog.blogservice.entity.Post;
 import com.blog.blogservice.entity.PostList;
 import com.blog.blogservice.entity.PostRequest;
+import com.blog.blogservice.entity.Response;
 
 public interface PostService {
 
-    PostList getAllPosts();
+    Response<PostList> getAllPosts();
 
     PostList getAllPostsByDepartmentId(Integer id);
 
@@ -22,7 +23,7 @@ public interface PostService {
 
     Post createPost(PostRequest request);
 
-    Post updatePost(PostRequest request);
+    Response updatePost(PostRequest request);
 
     void deletePost(Integer postId);
 }

@@ -3,6 +3,7 @@ package com.blog.blogservice.controller;
 import com.blog.blogservice.entity.Post;
 import com.blog.blogservice.entity.PostList;
 import com.blog.blogservice.entity.PostRequest;
+import com.blog.blogservice.entity.Response;
 import com.blog.blogservice.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,20 @@ public class BlogController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostList> getAllPosts() {
-        PostList postList = postService.getAllPosts();
-        return new ResponseEntity<>(postList, HttpStatus.OK);
+
+        Response<PostList> response = postService.getAllPosts();
+
+        if(response.isSuccess()) {
+
+            return new ResponseEntity<>(response.getData(), HttpStatus.OK);
+
+        }
+
+        return handleError(response);
+
     }
+
+
 
     @GetMapping(path = "/department/{id}")
     public ResponseEntity<PostList> getAllPostsByDepartmentId(@PathVariable Integer id) {
@@ -75,5 +87,9 @@ public class BlogController {
     public ResponseEntity<String> deletePost(@RequestParam(value = "postId") Integer postId){
         postService.deletePost(postId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private ResponseEntity<PostList> handleError(Response<PostList> response) {
+        return null;
     }
 }

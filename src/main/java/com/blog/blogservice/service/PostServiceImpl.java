@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -18,12 +19,13 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostRequestMapper mapper;
 
+
     @Override
-    public PostList getAllPosts() {
+    public Response<PostList> getAllPosts() {
         List<Post> posts = repositoryContainer.getPostRepository().findAll();
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
-        return postList;
+        return Response.of(postList);
     }
 
     @Override
@@ -81,16 +83,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(PostRequest request) {
+    public Response updatePost(PostRequest request) {
         Optional<Post> existingPost = repositoryContainer.getPostRepository().findById(request.getPostId());
         if(existingPost.isEmpty()) {
-            return null;
+            String code = "404";
+            String message = String.format("No post found with id: %s", request.getPostId());
+            return Response.errorRes(code, message);
         }
-
         Post updatedPost = mapUpdatedPost(request, existingPost.get());
-
-        return repositoryContainer.getPostRepository().save(updatedPost);
-
+        return Response.of(repositoryContainer.getPostRepository().save(updatedPost));
     }
 
     @Override
