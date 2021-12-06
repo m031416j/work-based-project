@@ -70,4 +70,10 @@ public class BlogController {
         Post p = postService.updatePost(request);
         return new ResponseEntity<>(p, HttpStatus.OK);
     }
+
+    @DeleteMapping
+    public ResponseEntity<String> deletePost(@RequestParam(value = "postId") Integer postId){
+        postService.deletePost(postId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -93,6 +93,11 @@ public class PostServiceImpl implements PostService {
 
     }
 
+    @Override
+    public void deletePost(Integer postId) {
+        repositoryContainer.getPostRepository().deleteById(postId);
+    }
+
     private Post mapUpdatedPost(PostRequest request, Post existingPost) {
         return mapper.updatePostFromRequest(request,
                 existingPost,

@@ -23,4 +23,6 @@ public interface PostService {
     Post createPost(PostRequest request);
 
     Post updatePost(PostRequest request);
+
+    void deletePost(Integer postId);
 }
