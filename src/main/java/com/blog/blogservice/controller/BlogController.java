@@ -2,11 +2,13 @@ package com.blog.blogservice.controller;
 
 import com.blog.blogservice.entity.*;
 import com.blog.blogservice.service.PostService;
+import com.blog.blogservice.utils.AppConstants;
 import com.blog.blogservice.utils.RequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -19,6 +21,9 @@ public class BlogController {
 
     @Autowired
     private RequestValidator requestValidator;
+
+    @Autowired
+    private AppConstants appConstants;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostList> getAllPosts() {
@@ -66,7 +71,7 @@ public class BlogController {
     }
 
     @GetMapping(path = "/skills/{id}")
-    public ResponseEntity<PostList> getAllPostsBySkillId(@PathVariable Integer id) {
+    public ResponseEntity<PostList> getAllPostsBySkillId(@PathVariable @Validated Integer id) {
         Response<PostList> response = postService.getAllPostsBySkillId(id);
         if(response.isSuccess()) {
             return new ResponseEntity<>(response.getData(), HttpStatus.OK);
@@ -85,7 +90,7 @@ public class BlogController {
 
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostRequest request) throws Exception {
-        requestValidator.validateRequest(request);
+        requestValidator.validatePostRequest(request);
         Response<Post> response = postService.createPost(request);
         if(response.isSuccess()) {
             return new ResponseEntity<>(response.getData(), HttpStatus.CREATED);
@@ -94,7 +99,8 @@ public class BlogController {
     }
 
     @PutMapping
-    public ResponseEntity<Post> updatePost(@RequestBody PostRequest request) {
+    public ResponseEntity<Post> updatePost(@RequestBody PostRequest request) throws Exception {
+        requestValidator.validatePutRequest(request);
         Response<Post> response = postService.updatePost(request);
         if(response.isSuccess()) {
             return new ResponseEntity<>(response.getData(), HttpStatus.CREATED);
@@ -116,8 +122,11 @@ public class BlogController {
         er.setCode(response.getCode());
         er.setMessage(response.getMessage());
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        if(er.getCode().equals("400")){
+        if(er.getCode().equals(appConstants.getErrorRes().getBadRequestCode())){
             status = HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>(er, status);
+        } else if (er.getCode().equals(appConstants.getErrorRes().getNotFoundCode())) {
+            status = HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(er, status);
         }
         return new ResponseEntity<>(er, status);

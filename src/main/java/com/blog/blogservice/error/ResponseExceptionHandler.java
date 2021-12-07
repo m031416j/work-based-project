@@ -6,12 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class ResponseExceptionHandler {
+public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity handleException(Exception ex, WebRequest request) {
+    public ResponseEntity handleInternalException(Exception ex, WebRequest request) {
         ErrorResponse er = new ErrorResponse("500", "Internal Server Error");
         return new ResponseEntity(er, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -21,4 +22,5 @@ public class ResponseExceptionHandler {
         ErrorResponse er = new ErrorResponse(ex.getCode(), ex.getErMessage());
         return new ResponseEntity(er, HttpStatus.BAD_REQUEST);
     }
+
 }
