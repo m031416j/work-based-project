@@ -31,6 +31,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Response<PostList> getAllPostsByDepartmentId(Integer id) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByDepartmentId(id);
+        if(posts.isEmpty()) {
+            return handleError("400", String.format("No posts found with department id: %s", id));
+        }
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return Response.of(postList);
@@ -39,6 +42,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Response<PostList> getAllPostsByDepartmentName(String name) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByDepartmentName(name);
+        if(posts.isEmpty()) {
+            return handleError("400", String.format("No posts found with department name: %s", name));
+        }
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return Response.of(postList);
@@ -47,6 +53,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Response<PostList> getAllPostsByManagerId(Integer id) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByManagerId(id);
+        if(posts.isEmpty()) {
+            return handleError("400", String.format("No posts found with manager id: %s", id));
+        }
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return Response.of(postList);
@@ -55,6 +64,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Response<PostList> getAllPostsByManagerName(String firstName, String surname) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByManagerFirstNameAndManagerSurname(firstName, surname);
+        if(posts.isEmpty()) {
+            return handleError("400", String.format("No posts found with manager name: %s %s", firstName, surname));
+        }
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return Response.of(postList);
@@ -63,6 +75,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Response<PostList> getAllPostsBySkillId(Integer id) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByTechnicalSkillId(id);
+        if(posts.isEmpty()) {
+            return handleError("400", String.format("No posts found with skill id: %s", id));
+        }
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return Response.of(postList);
@@ -71,6 +86,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Response<PostList> getAllPostsBySkillDescription(String description) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByTechnicalSkillDescription(description);
+        if(posts.isEmpty()) {
+            return handleError("400", String.format("No post found with skill description: %s", description));
+        }
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
         return Response.of(postList);
@@ -86,9 +104,7 @@ public class PostServiceImpl implements PostService {
     public Response updatePost(PostRequest request) {
         Optional<Post> existingPost = repositoryContainer.getPostRepository().findById(request.getPostId());
         if(existingPost.isEmpty()) {
-            String code = "400";
-            String message = String.format("No post found with id: %s", request.getPostId());
-            return Response.errorRes(code, message);
+            return handleError("400", String.format("No post found with id: %s", request.getPostId()));
         }
         Post updatedPost = mapUpdatedPost(request, existingPost.get());
         return Response.of(repositoryContainer.getPostRepository().save(updatedPost));
@@ -108,5 +124,9 @@ public class PostServiceImpl implements PostService {
                 repositoryContainer.getDepartmentRepository().getById(request.getDepartmentId()),
                 repositoryContainer.getManagerRepository().getById(request.getManagerId()),
                 repositoryContainer.getRoleRepository().getById(request.getRoleId()));
+    }
+
+    private Response handleError(String code, String message) {
+        return Response.errorRes(code, message);
     }
 }
