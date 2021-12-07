@@ -2,6 +2,7 @@ package com.blog.blogservice.controller;
 
 import com.blog.blogservice.entity.*;
 import com.blog.blogservice.service.PostService;
+import com.blog.blogservice.utils.RequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,9 @@ public class BlogController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private RequestValidator requestValidator;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PostList> getAllPosts() {
@@ -80,7 +84,8 @@ public class BlogController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostRequest request) {
+    public ResponseEntity<Post> createPost(@RequestBody PostRequest request) throws Exception {
+        requestValidator.validateRequest(request);
         Response<Post> response = postService.createPost(request);
         if(response.isSuccess()) {
             return new ResponseEntity<>(response.getData(), HttpStatus.CREATED);
