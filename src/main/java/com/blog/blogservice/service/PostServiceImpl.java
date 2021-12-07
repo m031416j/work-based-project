@@ -29,64 +29,64 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostList getAllPostsByDepartmentId(Integer id) {
+    public Response<PostList> getAllPostsByDepartmentId(Integer id) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByDepartmentId(id);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
-        return postList;
+        return Response.of(postList);
     }
 
     @Override
-    public PostList getAllPostsByDepartmentName(String name) {
+    public Response<PostList> getAllPostsByDepartmentName(String name) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByDepartmentName(name);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
-        return postList;
+        return Response.of(postList);
     }
 
     @Override
-    public PostList getAllPostsByManagerId(Integer id) {
+    public Response<PostList> getAllPostsByManagerId(Integer id) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByManagerId(id);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
-        return postList;
+        return Response.of(postList);
     }
 
     @Override
-    public PostList getAllPostsByManagerName(String firstName, String surname) {
+    public Response<PostList> getAllPostsByManagerName(String firstName, String surname) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByManagerFirstNameAndManagerSurname(firstName, surname);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
-        return postList;
+        return Response.of(postList);
     }
 
     @Override
-    public PostList getAllPostsBySkillId(Integer id) {
+    public Response<PostList> getAllPostsBySkillId(Integer id) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByTechnicalSkillId(id);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
-        return postList;
+        return Response.of(postList);
     }
 
     @Override
-    public PostList getAllPostsBySkillDescription(String description) {
+    public Response<PostList> getAllPostsBySkillDescription(String description) {
         List<Post> posts = repositoryContainer.getPostRepository().findAllByTechnicalSkillDescription(description);
         PostList postList = new PostList();
         postList.getPosts().addAll(posts);
-        return postList;
+        return Response.of(postList);
     }
 
     @Override
-    public Post createPost(PostRequest request) {
+    public Response<Post> createPost(PostRequest request) {
         Post post = mapper.createPostFromRequest(request);
-        return repositoryContainer.getPostRepository().save(post);
+        return Response.of(repositoryContainer.getPostRepository().save(post));
     }
 
     @Override
     public Response updatePost(PostRequest request) {
         Optional<Post> existingPost = repositoryContainer.getPostRepository().findById(request.getPostId());
         if(existingPost.isEmpty()) {
-            String code = "404";
+            String code = "400";
             String message = String.format("No post found with id: %s", request.getPostId());
             return Response.errorRes(code, message);
         }
@@ -95,8 +95,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(Integer postId) {
+    public Response deletePost(Integer postId) {
         repositoryContainer.getPostRepository().deleteById(postId);
+        Response response = new Response();
+        response.setStatus(Response.ResponseStatus.SUCCESS);
+        return response;
     }
 
     private Post mapUpdatedPost(PostRequest request, Post existingPost) {

@@ -9,21 +9,21 @@ public interface PostService {
 
     Response<PostList> getAllPosts();
 
-    PostList getAllPostsByDepartmentId(Integer id);
+    Response<PostList> getAllPostsByDepartmentId(Integer id);
 
-    PostList getAllPostsByDepartmentName(String name);
+    Response<PostList> getAllPostsByDepartmentName(String name);
 
-    PostList getAllPostsByManagerId(Integer id);
+    Response<PostList> getAllPostsByManagerId(Integer id);
 
-    PostList getAllPostsByManagerName(String firstName, String surname);
+    Response<PostList> getAllPostsByManagerName(String firstName, String surname);
 
-    PostList getAllPostsBySkillId(Integer id);
+    Response<PostList> getAllPostsBySkillId(Integer id);
 
-    PostList getAllPostsBySkillDescription(String description);
+    Response<PostList> getAllPostsBySkillDescription(String description);
 
-    Post createPost(PostRequest request);
+    Response<Post> createPost(PostRequest request);
 
     Response updatePost(PostRequest request);
 
-    void deletePost(Integer postId);
+    Response<Post> deletePost(Integer postId);
 }

@@ -41,7 +41,11 @@ public class Response<T> {
 
     @SuppressWarnings({ "rawtypes" })
     public static Response errorRes(String code, String message) {
-        return errorRes(code, message);
+        Response r = new Response();
+        r.setStatus(ResponseStatus.FAILURE);
+        r.setCode(code);
+        r.setMessage(message);
+        return r;
     }
 
     public boolean isFailed() {
