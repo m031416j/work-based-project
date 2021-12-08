@@ -23,7 +23,7 @@ public interface PostService {
 
     Response<Post> createPost(PostRequest request);
 
-    Response updatePost(PostRequest request);
+    Response<Post> updatePost(PostRequest request);
 
     Response<Post> deletePost(Integer postId);
 }
