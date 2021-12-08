@@ -1,20 +1,29 @@
 package com.blog.blogservice.service;
 
+import com.blog.blogservice.entity.Post;
 import com.blog.blogservice.entity.PostList;
+import com.blog.blogservice.entity.PostRequest;
+import com.blog.blogservice.entity.Response;
 
 public interface PostService {
 
-    PostList getAllPosts();
+    Response<PostList> getAllPosts();
 
-    PostList getAllPostsByDepartmentId(Integer id);
+    Response<PostList> getAllPostsByDepartmentId(Integer id);
 
-    PostList getAllPostsByDepartmentName(String name);
+    Response<PostList> getAllPostsByDepartmentName(String name);
 
-    PostList getAllPostsByManagerId(Integer id);
+    Response<PostList> getAllPostsByManagerId(Integer id);
 
-    PostList getAllPostsByManagerName(String firstName, String surname);
+    Response<PostList> getAllPostsByManagerName(String firstName, String surname);
 
-    PostList getAllPostsBySkillId(Integer id);
+    Response<PostList> getAllPostsBySkillId(Integer id);
 
-    PostList getAllPostsBySkillDescription(String description);
+    Response<PostList> getAllPostsBySkillDescription(String description);
+
+    Response<Post> createPost(PostRequest request);
+
+    Response<Post> updatePost(PostRequest request);
+
+    Response<Post> deletePost(Integer postId);
 }
