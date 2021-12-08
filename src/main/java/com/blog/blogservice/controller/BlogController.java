@@ -88,6 +88,25 @@ public class BlogController {
         return handleError(response);
     }
 
+
+    @GetMapping(path = "/role/{id}")
+    public ResponseEntity<PostList> getAllPostsByRoleId(@PathVariable @Validated Integer id) {
+        Response<PostList> response = postService.getAllPostsByRoleId(id);
+        if(response.isSuccess()) {
+            return new ResponseEntity<>(response.getData(), HttpStatus.OK);
+        }
+        return handleError(response);
+    }
+
+    @GetMapping(path = "/role/description/")
+    public ResponseEntity<PostList> getAllPostsByRoleDescription(@RequestParam(value = "description") String description) {
+        Response<PostList> response = postService.getAllPostsByRoleDescription(description);
+        if(response.isSuccess()) {
+            return new ResponseEntity<>(response.getData(), HttpStatus.OK);
+        }
+        return handleError(response);
+    }
+
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostRequest request) throws Exception {
         requestValidator.validatePostRequest(request);

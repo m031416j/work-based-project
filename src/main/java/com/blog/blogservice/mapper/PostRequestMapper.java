@@ -16,7 +16,7 @@ public class PostRequestMapper {
         Role r = new Role();
         d.setId(request.getDepartmentId());
         m.setId(request.getManagerId());
-        r.setRoleId(request.getRoleId());
+        r.setId(request.getRoleId());
         Set<TechnicalSkill> skills = new HashSet<>(request.getTechnicalSkills());
         post.setDepartment(d);
         post.setManager(m);

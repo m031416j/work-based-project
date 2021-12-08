@@ -26,4 +26,8 @@ public interface PostService {
     Response<Post> updatePost(PostRequest request);
 
     Response<Post> deletePost(Integer postId);
+
+    Response<PostList> getAllPostsByRoleId(Integer id);
+
+    Response<PostList> getAllPostsByRoleDescription(String description);
 }

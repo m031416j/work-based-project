@@ -1,6 +1,5 @@
 package com.blog.blogservice.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,13 +13,13 @@ public class Role {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "role_id")
-    private Integer roleId;
+    private Integer id;
 
     @Column(name = "role_description")
-    private String roleDescription;
+    private String description;
 
-    public Role(String roleDescription) {
-        this.roleDescription = roleDescription;
+    public Role(String description) {
+        this.description = description;
     }
 
     public Role(){}
