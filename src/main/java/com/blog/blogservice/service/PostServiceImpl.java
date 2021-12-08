@@ -7,6 +7,7 @@ import com.blog.blogservice.utils.RepositoryContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,6 +121,28 @@ public class PostServiceImpl implements PostService {
         Response response = new Response();
         response.setStatus(Response.ResponseStatus.SUCCESS);
         return response;
+    }
+
+    @Override
+    public Response<PostList> getAllPostsByRoleId(Integer id) {
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByRoleId(id);
+        if(posts.isEmpty()) {
+            return handleError(appConstants.getErrorRes().getNotFoundCode(), String.format("No posts found with role id: %s", id));
+        }
+        PostList postList = new PostList();
+        postList.getPosts().addAll(posts);
+        return Response.of(postList);
+    }
+
+    @Override
+    public Response<PostList> getAllPostsByRoleDescription(String description) {
+        List<Post> posts = repositoryContainer.getPostRepository().findAllByRoleDescription(description);
+        if(posts.isEmpty()) {
+            return handleError(appConstants.getErrorRes().getNotFoundCode(), String.format("No posts found with role description: %s", description));
+        }
+        PostList postList = new PostList();
+        postList.getPosts().addAll(posts);
+        return Response.of(postList);
     }
 
     private Post mapUpdatedPost(PostRequest request, Post existingPost) {

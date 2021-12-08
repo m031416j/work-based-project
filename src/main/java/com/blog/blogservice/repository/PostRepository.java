@@ -21,5 +21,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     List<Post> findAllByTechnicalSkillId(Integer id);
 
     List<Post> findAllByTechnicalSkillDescription(String description);
-    
+
+    List<Post> findAllByRoleId(Integer id);
+
+    List<Post> findAllByRoleDescription(String description);
 }
