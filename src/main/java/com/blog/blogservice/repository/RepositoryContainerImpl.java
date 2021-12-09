@@ -1,9 +1,5 @@
-package com.blog.blogservice.utils;
+package com.blog.blogservice.repository;
 
-import com.blog.blogservice.repository.DepartmentRepository;
-import com.blog.blogservice.repository.ManagerRepository;
-import com.blog.blogservice.repository.PostRepository;
-import com.blog.blogservice.repository.RoleRepository;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;

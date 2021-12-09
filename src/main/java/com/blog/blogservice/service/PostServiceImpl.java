@@ -3,11 +3,10 @@ package com.blog.blogservice.service;
 import com.blog.blogservice.entity.*;
 import com.blog.blogservice.mapper.PostRequestMapper;
 import com.blog.blogservice.utils.AppConstants;
-import com.blog.blogservice.utils.RepositoryContainer;
+import com.blog.blogservice.repository.RepositoryContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -117,6 +116,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Response deletePost(Integer postId) {
+        Optional<Post> existingPost = repositoryContainer.getPostRepository().findById(postId);
+        if(existingPost.isEmpty()) {
+            return handleError(appConstants.getErrorRes().getNotFoundCode(), String.format("No post found with id: %s", postId));
+        }
         repositoryContainer.getPostRepository().deleteById(postId);
         Response response = new Response();
         response.setStatus(Response.ResponseStatus.SUCCESS);
