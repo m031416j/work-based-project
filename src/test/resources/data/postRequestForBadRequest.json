@@ -1,0 +1,17 @@
+{
+    "managerId": 2,
+    "roleId": 2,
+    "technicalSkills": [
+        {
+            "id": 3
+        },
+        {
+            "id": 1
+        },
+        {
+            "id": 2
+        }
+    ],
+    "content": "Some random content about the rotation",
+    "rating": 5
+}

@@ -1,0 +1,22 @@
+{
+  "postId": 7,
+  "departmentId": 2,
+  "managerId": 2,
+  "roleId": 2,
+  "technicalSkills": [
+    {
+      "id": 1,
+      "description":"Java"
+    },
+    {
+      "id": 2,
+      "description":"HTML"
+    },
+    {
+      "id": 3,
+      "description":"AWS"
+    }
+  ],
+  "content": "Yeooooo some more",
+  "rating": 4
+}
